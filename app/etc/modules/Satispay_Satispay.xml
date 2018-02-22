@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Satispay_Satispay>
+      <active>true</active>
+      <codePool>community</codePool>
+    </Satispay_Satispay>
+  </modules>
+</config>
