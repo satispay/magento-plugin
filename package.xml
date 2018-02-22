@@ -3,7 +3,7 @@
     <name>Satispay_Satispay</name>
     <version>1.4.3</version>
     <stability>stable</stability>
-    <license uri="https://www.gnu.org/licenses/gpl-3.0.en.html">GPL-3.0</license>
+    <license>MIT</license>
     <channel>community</channel>
     <extends />
     <summary>Satispay is a new payment system that allows you to pay stores or friends from your smartphone.</summary>
