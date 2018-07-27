@@ -12,7 +12,6 @@ class Satispay_Satispay_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     \SatispayOnline\Api::setSecurityBearer($helper->getSecurityBearer($payment->getOrder()->getStoreId()));
     \SatispayOnline\Api::setStaging($helper->isStaging($payment->getOrder()->getStoreId()));
-    
     \SatispayOnline\Api::setPluginName('Magento');
     \SatispayOnline\Api::setType('ECOMMERCE-PLUGIN');
     $magentoVersion = Mage::getVersionInfo();

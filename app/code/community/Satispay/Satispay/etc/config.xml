@@ -2,7 +2,7 @@
 <config>
   <modules>
     <Satispay_Satispay>
-      <version>1.4.3</version>
+      <version>1.5.0</version>
     </Satispay_Satispay>
   </modules>
   <global>
@@ -50,16 +50,4 @@
       </satispay>
     </payment>
   </default>
-  <crontab>
-    <jobs>
-      <satispay_check_pendings>
-        <schedule>
-          <cron_expr>* * * * *</cron_expr>
-        </schedule>
-        <run>
-          <model>satispay/observer::checkPendings</model>
-        </run>
-      </satispay_check_pendings>
-    </jobs>
-  </crontab>
 </config>

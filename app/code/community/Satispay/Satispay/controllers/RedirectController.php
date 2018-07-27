@@ -7,7 +7,6 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
 
     \SatispayOnline\Api::setSecurityBearer($helper->getSecurityBearer());
     \SatispayOnline\Api::setStaging($helper->isStaging());
-    
     \SatispayOnline\Api::setPluginName('Magento');
     \SatispayOnline\Api::setType('ECOMMERCE-PLUGIN');
     $magentoVersion = Mage::getVersionInfo();
@@ -30,14 +29,10 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
       foreach ($items as $item) {
         try {
           $cart->addOrderItem($item);
-        } catch (Exception $e) {
-          $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
-            '_secure' => true
-          )));
-        }
+        } catch (Exception $e) { }
       }
-
       $cart->save();
+
       $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
         '_secure' => true
       )));

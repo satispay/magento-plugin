@@ -1,5 +1,5 @@
 <_>
-   <form_key>kTwfouTH8gvGDGjy</form_key>
+   <form_key>V6IQHPTSQX6nZaJ4</form_key>
    <name>Satispay_Satispay</name>
    <channel>community</channel>
    <version_ids>
@@ -9,9 +9,9 @@
    <description>Satispay is a new payment system that allows you to pay stores or friends from your smartphone. To make the service more secure, more efficient and cheaper, we constructed an entirely new platform that is independent from traditional payment methods such as debit and credit cards.</description>
    <license>GPL-3.0</license>
    <license_uri>https://www.gnu.org/licenses/gpl-3.0.en.html</license_uri>
-   <version>1.4.3</version>
+   <version>1.5.0</version>
    <stability>stable</stability>
-   <notes>Fixed multi website refund</notes>
+   <notes>Various Improvements</notes>
    <authors>
       <name>
          <name>Satispay</name>
@@ -40,7 +40,7 @@
             <max/>
          </max>
          <files>
-            <files>             </files>
+            <files>                </files>
          </files>
       </package>
       <extension>
@@ -82,4 +82,8 @@
          <ignore/>
       </ignore>
    </contents>
+   <page>1</page>
+   <limit>200</limit>
+   <folder/>
+   <package/>
 </_>
