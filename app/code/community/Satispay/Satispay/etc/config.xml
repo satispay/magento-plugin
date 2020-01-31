@@ -16,6 +16,11 @@
         <class>Satispay_Satispay_Model</class>
       </satispay>
     </models>
+    <blocks>
+      <satispay>
+        <class>Satispay_Satispay_Block</class>
+      </satispay>
+    </blocks>
   </global>
   <frontend>
     <routers>
@@ -50,4 +55,37 @@
       </satispay>
     </payment>
   </default>
-</config>
+  <admin>
+    <routers>
+      <adminhtml>
+        <args>
+          <modules>
+            <satispay after="Mage_Adminhtml">Satispay_Satispay</satispay>
+          </modules>
+        </args>
+      </adminhtml>
+    </routers>
+  </admin>
+  <adminhtml>
+    <acl>
+      <resources>
+        <all>
+          <title>Allow Everything</title>
+        </all>
+        <admin>
+          <children>
+            <system>
+              <payment>
+                <group>
+                    <satispay>
+                      <title>Satispay Settings</title>
+                    </satispay>
+                </group>
+              </payment>
+            </system>
+          </children>
+        </admin>
+      </resources>
+    </acl>
+  </adminhtml>
+ </config>

@@ -1,21 +1,27 @@
 <?php
-require_once(dirname(__FILE__).'/../includes/online-api-php-sdk/init.php');
+require_once(dirname(__FILE__).'/../includes/gbusiness-api-php-sdk/init.php');
 
 class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Action {
+
   public function indexAction() {
-    $helper = Mage::helper('satispay');
+      $helper = Mage::helper('satispay');
+      $logger = Mage::getModel('satispay/logger', array($helper->debugModeEnable()));
+      $sandbox = $helper->isSandbox();
+      $logger->debug('sandbox: ' . ($sandbox ? 'yes' : 'no'));
+      \SatispayGBusiness\Api::setSandbox($sandbox);
+      \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+      \SatispayGBusiness\Api::setPluginNameHeader('Magento');
+      \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
+      $magentoVersion = Mage::getVersionInfo();
+      \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
+      \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey(null, $sandbox));
+      \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey(null, $sandbox));
+      \SatispayGBusiness\Api::setKeyId($helper->getKeyId(null, $sandbox));
+      $payment = \SatispayGBusiness\Payment::get($this->getRequest()->getQuery('payment_id'));
 
-    \SatispayOnline\Api::setSecurityBearer($helper->getSecurityBearer());
-    \SatispayOnline\Api::setStaging($helper->isStaging());
-    \SatispayOnline\Api::setPluginName('Magento');
-    \SatispayOnline\Api::setType('ECOMMERCE-PLUGIN');
-    $magentoVersion = Mage::getVersionInfo();
-    \SatispayOnline\Api::setPlatformVersion($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
+    $order = Mage::getModel('sales/order')->load($payment->metadata->order_id);
 
-    $charge = \SatispayOnline\Charge::get($this->getRequest()->getQuery('charge_id'));
-    $order = Mage::getModel('sales/order')->load($charge->metadata->order_id);
-
-    if ($charge->status === 'SUCCESS') {
+    if ($payment->status === 'ACCEPTED') {
       $this->getResponse()->setRedirect(Mage::getUrl('checkout/onepage/success', array(
         '_secure' => true
       )));
@@ -32,9 +38,10 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
         } catch (Exception $e) { }
       }
       $cart->save();
-
+      // cart session message
       $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
-        '_secure' => true
+        '_secure' => true,
+          Mage::getSingleton('core/session')->addSuccess('ATTENTION: you don\'t have sufficient balance. Try borrowing from a friend to complete the payment')
       )));
     }
   }

@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../includes/online-api-php-sdk/init.php');
+require_once(dirname(__FILE__).'/../includes/gbusiness-api-php-sdk/init.php');
 
 class Satispay_Satispay_Model_Payment extends Mage_Payment_Model_Method_Abstract {
   protected $_code = 'satispay';
@@ -8,21 +8,27 @@ class Satispay_Satispay_Model_Payment extends Mage_Payment_Model_Method_Abstract
   protected $_canUseForMultishipping = false;
 
   public function refund(Varien_Object $payment, $amount) {
-    $helper = Mage::helper('satispay');
+      $helper = Mage::helper('satispay');
+      $sandbox = $helper->isSandbox();
+      $logger = Mage::getModel('satispay/logger', array($helper->debugModeEnable()));
+      \SatispayGBusiness\Api::setSandbox($sandbox);
+      \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+      \SatispayGBusiness\Api::setPluginNameHeader('Magento');
+      \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
+      $magentoVersion = Mage::getVersionInfo();
+      \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
+      \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey(null, $sandbox));
+      \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey(null, $sandbox));
+      \SatispayGBusiness\Api::setKeyId($helper->getKeyId(null, $sandbox));
 
-    \SatispayOnline\Api::setSecurityBearer($helper->getSecurityBearer($payment->getOrder()->getStoreId()));
-    \SatispayOnline\Api::setStaging($helper->isStaging($payment->getOrder()->getStoreId()));
-    \SatispayOnline\Api::setPluginName('Magento');
-    \SatispayOnline\Api::setType('ECOMMERCE-PLUGIN');
-    $magentoVersion = Mage::getVersionInfo();
-    \SatispayOnline\Api::setPlatformVersion($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
-
-    $refund = \SatispayOnline\Refund::create(array(
-      'charge_id' => $payment->getParentTransactionId(),
-      'currency' => $payment->getOrder()->getBaseCurrencyCode(),
-      'description' => '#'.$payment->getOrder()->getIncrementId(),
-      'amount' => round($amount * 100)
-    ));
+      $refundBody = array(
+          "flow" => "REFUND",
+          "amount_unit" => round($amount * 100),
+          "currency" => $payment->getOrder()->getBaseCurrencyCode(),
+          "parent_payment_uid" =>  $payment->getParentTransactionId()
+      );
+      $payment = \SatispayGBusiness\Payment::create($refundBody);
+      $logger->debug(print_r(array('refundBody' => $refundBody), true));
 
     return $this;
   }

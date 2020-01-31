@@ -1,61 +1,100 @@
 <?php
-require_once(dirname(__FILE__).'/../includes/online-api-php-sdk/init.php');
+require_once(dirname(__FILE__) . '/../includes/gbusiness-api-php-sdk/init.php');
 
-class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Action {
-  public function indexAction() {
-    $helper = Mage::helper('satispay');
+class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Action
+{
+    public function indexAction()
+    {
+        $helper = Mage::helper('satispay');
+        $logger = Mage::getModel('satispay/logger', array($helper->debugModeEnable()));
+        $sandbox = $helper->isSandbox();
+        $logger->debug('sandbox: ' . ($sandbox ? 'yes' : 'no'));
+        $publicKey = $helper->getPublicKey(null, $sandbox);
+        $privateKey = $helper->getPrivateKey(null, $sandbox);
+        $keyId = $helper->getKeyId(null, $sandbox);
+        if (!$publicKey || !$privateKey || !$keyId) {
+            $logger->error('PublicKey: ' . ($publicKey ? 'ok' : 'missing'));
+            $logger->error('PrivateKey: ' . ($privateKey ? 'ok' : 'missing'));
+            $logger->error('KeyId: ' . ($keyId ? 'ok' : 'missing' ));
+            $session = Mage::getSingleton('checkout/session');
+            $order = $session->getLastRealOrder();
+            $session->clearHelperData();
+            $order->cancel()->save();
 
-    \SatispayOnline\Api::setSecurityBearer($helper->getSecurityBearer());
-    \SatispayOnline\Api::setStaging($helper->isStaging());
-    \SatispayOnline\Api::setPluginName('Magento');
-    \SatispayOnline\Api::setType('ECOMMERCE-PLUGIN');
-    $magentoVersion = Mage::getVersionInfo();
-    \SatispayOnline\Api::setPlatformVersion($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
+            $cart = Mage::getSingleton('checkout/cart');
+            $items = $order->getItemsCollection();
+            foreach ($items as $item) {
+                try {
+                    $cart->addOrderItem($item);
+                } catch (Exception $e) {
+                    $logger->exception($e);
+                }
+            }
+            $cart->save();
+            $logger->error('order '. $order->getIncrementId() . ' has been canceled');
+            return $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
+                '_secure' => true,
+                Mage::getSingleton('core/session')->addSuccess('Please Generate New KEYS to complete the order with Satispay')
+            )));
+        }
 
-    $session = Mage::getSingleton('checkout/session');
-    $order = $session->getLastRealOrder();
+        \SatispayGBusiness\Api::setSandbox($sandbox);
+        \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+        \SatispayGBusiness\Api::setPluginNameHeader('Magento');
+        \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
+        $magentoVersion = Mage::getVersionInfo();
+        \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'] . '.' . $magentoVersion['minor'] . '.' . $magentoVersion['revision']);
+        \SatispayGBusiness\Api::setPublicKey($publicKey);
+        \SatispayGBusiness\Api::setPrivateKey($privateKey);
+        \SatispayGBusiness\Api::setKeyId($keyId);
 
-    $backFromSatispay = $this->getRequest()->getQuery('back-from-satispay');
-    if (!empty($backFromSatispay)) {
-      $session->clearHelperData();
-      $order->cancel()->save();
+        $session = Mage::getSingleton('checkout/session');
+        $order = $session->getLastRealOrder();
 
-      $cart = Mage::getSingleton('checkout/cart');
-      $items = $order->getItemsCollection();
-      foreach ($items as $item) {
-        try {
-          $cart->addOrderItem($item);
-        } catch (Exception $e) { }
-      }
-      $cart->save();
+        $backFromSatispay = $this->getRequest()->getQuery('back-from-satispay');
+        if (!empty($backFromSatispay)) {
+            $logger->error('back-from-satispay is not empty');
+            $session->clearHelperData();
+            $order->cancel()->save();
 
-      $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
-        '_secure' => true
-      )));
-    } else {
-      $checkout = \SatispayOnline\Checkout::create(array(
-        'description' => '#'.$order->getIncrementId(),
-        'phone_number' => '',
-        'redirect_url' => Mage::getUrl('satispay/redirect', array(
-          '_secure' => true
-        )),
-        'callback_url' => Mage::getUrl('satispay/callback', array(
-          '_secure' => true,
-          '_query' => 'charge_id={uuid}'
-        )),
-        'checkout_expire_callback_url' => Mage::getUrl('satispay/expire', array(
-          '_secure' => true,
-          '_query' => 'order_id='.$order->getId()
-        )),
-        'expire_in' => 60*15,
-        'amount_unit' => round($order->getGrandTotal() * 100),
-        'currency' => $order->getOrderCurrencyCode(),
-        'metadata' => array(
-          'order_id' => $order->getId()
-        )
-      ));
-
-      $this->getResponse()->setBody("<script>history.replaceState({}, '', '?back-from-satispay=1'); setTimeout(function () { location.href = '$checkout->checkout_url'; }, 200);</script>");
+            $cart = Mage::getSingleton('checkout/cart');
+            $items = $order->getItemsCollection();
+            foreach ($items as $item) {
+                try {
+                    $cart->addOrderItem($item);
+                } catch (Exception $e) {
+                }
+            }
+            $cart->save();
+            $logger->error('order '. $order->getIncrementId() . ' has been canceled');
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
+                '_secure' => true
+            )));
+        } else {
+            $paymentBody = array(
+                "flow" => "MATCH_CODE",
+                "amount_unit" => round($order->getGrandTotal() * 100),
+                "currency" => $order->getOrderCurrencyCode(),
+                "description" => "#" . $order->getIncrementId(),
+                "callback_url" => Mage::getUrl('satispay/callback', array(
+                    "_secure" => true,
+                    "_query" => "payment_id={uuid}"
+                )),
+                "metadata" => array(
+                    "order_id" => $order->getId(),
+                    'redirect_url' => Mage::getUrl('satispay/redirect', array(
+                        '_secure' => true,
+                        '_query' => 'payment_id={uuid}'
+                    ))
+                )
+            );
+            $logger->debug(print_r(array('paymentBody ' => $paymentBody), true));
+            $payment = \SatispayGBusiness\Payment::create($paymentBody);
+            $satispayUrl = 'https://online.satispay.com/pay/' . $payment->id;
+            if ($sandbox) {
+                $satispayUrl = 'https://staging.online.satispay.com/pay/' . $payment->id;
+            }
+            $this->getResponse()->setBody("<script src=\"https://staging.online.satispay.com/web-button.js\" data-payment-id=\"$payment->id\"></script><script>history.replaceState({}, '', '?back-from-satispay=1'); setTimeout(function () { location.href = '$satispayUrl'; }, 200);</script>");
+        }
     }
-  }
 }
