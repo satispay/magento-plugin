@@ -9,9 +9,9 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
         $logger = Mage::getModel('satispay/logger', array($helper->debugModeEnable()));
         $sandbox = $helper->isSandbox();
         $logger->debug('sandbox: ' . ($sandbox ? 'yes' : 'no'));
-        $publicKey = $helper->getPublicKey(null, $sandbox);
-        $privateKey = $helper->getPrivateKey(null, $sandbox);
-        $keyId = $helper->getKeyId(null, $sandbox);
+        $publicKey = $helper->getPublicKey();
+        $privateKey = $helper->getPrivateKey();
+        $keyId = $helper->getKeyId($sandbox);
         if (!$publicKey || !$privateKey || !$keyId) {
             $logger->error('PublicKey: ' . ($publicKey ? 'ok' : 'missing'));
             $logger->error('PrivateKey: ' . ($privateKey ? 'ok' : 'missing'));
@@ -39,11 +39,10 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
         }
 
         \SatispayGBusiness\Api::setSandbox($sandbox);
-        \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+        \SatispayGBusiness\Api::setPluginVersionHeader($helper->getExtensionVersion());
         \SatispayGBusiness\Api::setPluginNameHeader('Magento');
         \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
-        $magentoVersion = Mage::getVersionInfo();
-        \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'] . '.' . $magentoVersion['minor'] . '.' . $magentoVersion['revision']);
+        \SatispayGBusiness\Api::setPlatformVersionHeader(Mage::getVersion());
         \SatispayGBusiness\Api::setPublicKey($publicKey);
         \SatispayGBusiness\Api::setPrivateKey($privateKey);
         \SatispayGBusiness\Api::setKeyId($keyId);

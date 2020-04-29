@@ -8,142 +8,94 @@
           <frontend_type>text</frontend_type>
           <sort_order>9</sort_order>
           <show_in_default>1</show_in_default>
-          <show_in_website>1</show_in_website>
+          <show_api_wizard.phtmlin_website>1</show_api_wizard.phtmlin_website>
           <show_in_store>1</show_in_store>
+          <expanded>1</expanded>
           <fields>
             <active translate="label">
-              <label>Active</label>
+              <label>Enabled</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
-              <sort_order>1</sort_order>
+              <sort_order>10</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
             </active>
-            <title translate="label">
-              <label>Title</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>2</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>1</show_in_website>
-              <show_in_store>1</show_in_store>
-            </title>
-            <sort_order translate="label">
-              <label>Sort Order</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>3</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>1</show_in_website>
-              <show_in_store>0</show_in_store>
-              <frontend_class>validate-number</frontend_class>
-            </sort_order>
-            <sandbox translate="label">
-              <label>Sandbox</label>
-              <frontend_type>select</frontend_type>
-              <source_model>adminhtml/system_config_source_yesno</source_model>
-              <sort_order>4</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-            </sandbox>
-            <generate_keys translate="label">
-              <label>Configure with an Activation Code</label>
-              <frontend_type>button</frontend_type>
-              <frontend_model>satispay/adminhtml_system_config_form_button</frontend_model>
-              <sort_order>20</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>1</show_in_website>
-              <show_in_store>1</show_in_store>
-            </generate_keys>
-            <token translate="label">
-              <label>Token</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>5</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>0</sandbox></depends>
-              <comment>Save configuration before generating keys</comment>
-            </token>
-            <token_sandbox translate="label">
-              <label>Token Sandbox</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>6</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>1</sandbox></depends>
-              <comment>Save configuration before generating keys</comment>
-            </token_sandbox>
-            <key_public translate="label">
-              <label>Public Key</label>
-              <sort_order>7</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>0</sandbox></depends>
-            </key_public>
-            <key_private translate="label">
-              <label>Private Key</label>
-              <sort_order>8</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>0</sandbox></depends>
-            </key_private>
-            <key_id translate="label">
-              <label>Key ID</label>
-              <frontend_type>obscure</frontend_type>
-              <sort_order>9</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>0</sandbox></depends>
-            </key_id>
-            <key_public_sandbox translate="label">
-              <label>Public Key sandbox</label>
-              <sort_order>7</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>1</sandbox></depends>
-            </key_public_sandbox>
-            <key_private_sandbox translate="label">
-              <label>Private Key sandbox</label>
-              <sort_order>8</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>1</sandbox></depends>
-            </key_private_sandbox>
-            <key_id_sandbox translate="label">
-              <label>Key ID sandbox</label>
-              <sort_order>9</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>0</show_in_website>
-              <show_in_store>0</show_in_store>
-              <depends><sandbox>1</sandbox></depends>
-            </key_id_sandbox>
+
             <debug_mode translate="label">
               <label>Debug Mode</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
-              <sort_order>10</sort_order>
+              <sort_order>15</sort_order>
               <comment><![CDATA[Enable more verbose logging for debug purpose]]></comment>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
             </debug_mode>
-            <regenerate_keys translate="label">
-              <label>Re-Configure with an Activation Code</label>
-              <frontend_type>button</frontend_type>
-              <frontend_model>satispay/adminhtml_system_config_form_buttonregenerate</frontend_model>
-              <sort_order>21</sort_order>
+
+            <title translate="label">
+              <label>Title</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>20</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>1</show_in_store>
-              <comment>After keys generation reload the page to see the value</comment>
-            </regenerate_keys>
+            </title>
+
+            <sandbox translate="label">
+              <label>Sandbox</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>30</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sandbox>
+
+            <token translate="label comment">
+              <label>Activation code</label>
+              <comment><![CDATA[Insert the six characters activation code from Online Shop section on Satispay Dashboard. Save configuration to enable the 'Activate' button.]]></comment>
+              <frontend_type>text</frontend_type>
+              <sort_order>40</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends><sandbox>0</sandbox></depends>
+            </token>
+
+            <token_sandbox translate="label comment">
+              <label>Activation code (sandbox)</label>
+              <comment><![CDATA[Insert the six characters sandbox activation code from Online Shop section on Satispay Dashboard. Save configuration to enable the 'Activate' button.]]></comment>
+              <frontend_type>text</frontend_type>
+              <sort_order>40</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends><sandbox>1</sandbox></depends>
+            </token_sandbox>
+
+
+            <activate translate="button_label">
+              <label></label>
+              <button_label>Activate sandbox</button_label>
+              <button_url><![CDATA[]]></button_url>
+              <frontend_model>satispay/adminhtml_system_config_form_button</frontend_model>
+              <sort_order>50</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends><sandbox>0</sandbox></depends>
+            </activate>
+
+            <sort_order translate="label">
+              <label>Sort Order</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>60</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>0</show_in_store>
+              <frontend_class>validate-number</frontend_class>
+            </sort_order>
           </fields>
         </satispay>
       </groups>

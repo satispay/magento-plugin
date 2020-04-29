@@ -23,6 +23,16 @@ class Satispay_Satispay_Model_Logger
     {
         $this->debugModeEnable = $debugModeEnable;
         $this->logger = Mage::getModel('core/logger');
+        $this->logger->log(
+            sprintf(
+                'Magento v%s - Satispay Extension v%s',
+                Mage::getVersion(),
+                Mage::helper('satispay')->getExtensionVersion()
+            ),
+            Zend_Log::INFO,
+            self::LOG_FILENAME,
+            $debugModeEnable
+        );
     }
 
     /**

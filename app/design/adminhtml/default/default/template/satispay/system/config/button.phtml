@@ -1,0 +1,15 @@
+<script type="text/javascript">
+    //<![CDATA[
+    function generate() {
+        new Ajax.Request('<?php echo $this->getAjaxGenerateKeys() ?>', {
+            method:     'get',
+            onSuccess: function(transport){
+                if (transport.responseText){
+                    alert(transport.responseText);
+                }
+            }
+        });
+    }
+    //]]>
+</script>
+<?php echo $this->getButtonHtml() ?>

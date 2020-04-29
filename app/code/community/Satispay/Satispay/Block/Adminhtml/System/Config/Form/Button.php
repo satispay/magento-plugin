@@ -20,7 +20,6 @@ class Satispay_Satispay_Block_Adminhtml_System_Config_Form_Button extends Mage_A
      */
     protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
     {
-
         return $this->_toHtml();
     }
 
@@ -31,7 +30,7 @@ class Satispay_Satispay_Block_Adminhtml_System_Config_Form_Button extends Mage_A
      */
     public function getAjaxGenerateKeys()
     {
-        return Mage::helper('adminhtml')->getUrl('adminhtml/adminhtml_keysgeneretor/generatekeys');
+        return Mage::helper('adminhtml')->getUrl('adminhtml/adminhtml_keysgenerator/generatekeys');
     }
 
     /**
@@ -42,14 +41,28 @@ class Satispay_Satispay_Block_Adminhtml_System_Config_Form_Button extends Mage_A
     public function getButtonHtml()
     {
         $helper = Mage::helper('satispay');
-        $sandbox = $helper->isSandbox();
-        $button = $this->getLayout()->createBlock('adminhtml/widget_button')
-            ->setData(array(
-            'id'        => 'satispay_button',
-            'label'     => $this->helper('adminhtml')->__('Generate Keys'),
-            'onclick'   => 'javascript:generate(); return false;',
-            'style'   => ($helper->getPublicKey(null, $sandbox) && $helper->getPrivateKey(null, $sandbox) && $helper->getKeyId(null, $sandbox)) ? "display: none;" : ''
-            ));
+
+        $isActivated = $helper->isActivated();
+        $buttonData = array(
+            'id' => 'satispay_button',
+            'label' => $this->helper('adminhtml')->__($isActivated ? 'Activate with new activation code' : 'Activate'),
+        );
+
+        $isSandbox = $helper->isSandbox();
+        if ($isSandbox) {
+            $buttonData['label'] = $this->helper('adminhtml')->__($isActivated ? 'Activate sandbox with new activation code' : 'Activate sandbox');
+        }
+
+        $activationCodeNotSpecified = empty($helper->getToken($isSandbox));
+        if ($activationCodeNotSpecified) {
+            $buttonData['disabled'] = 'disabled';
+        } else {
+            $buttonData['onclick'] = 'javascript:generate(); return false;';
+        }
+
+        $button = $this->getLayout()
+            ->createBlock('adminhtml/widget_button')
+            ->setData($buttonData);
 
         return $button->toHtml();
     }

@@ -62,6 +62,11 @@ To enable sandbox use `setSandbox` function.
 
 ## Changelog
 
+### 2.0.0
+
+- Performed refactoring to simplify configuration section
+- Performed refactoring to remove some code fragility and smells
+
 ### 1.2.0
 
 - Added `\SatispayGBusiness\PreAuthorizedPaymentToken` class.

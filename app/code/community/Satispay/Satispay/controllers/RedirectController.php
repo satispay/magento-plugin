@@ -9,14 +9,13 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
       $sandbox = $helper->isSandbox();
       $logger->debug('sandbox: ' . ($sandbox ? 'yes' : 'no'));
       \SatispayGBusiness\Api::setSandbox($sandbox);
-      \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+      \SatispayGBusiness\Api::setPluginVersionHeader($helper->getExtensionVersion());
       \SatispayGBusiness\Api::setPluginNameHeader('Magento');
       \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
-      $magentoVersion = Mage::getVersionInfo();
-      \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'].'.'.$magentoVersion['minor'].'.'.$magentoVersion['revision']);
-      \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey(null, $sandbox));
-      \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey(null, $sandbox));
-      \SatispayGBusiness\Api::setKeyId($helper->getKeyId(null, $sandbox));
+      \SatispayGBusiness\Api::setPlatformVersionHeader(Mage::getVersion());
+      \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey());
+      \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey());
+      \SatispayGBusiness\Api::setKeyId($helper->getKeyId($sandbox));
       $payment = \SatispayGBusiness\Payment::get($this->getRequest()->getQuery('payment_id'));
 
     $order = Mage::getModel('sales/order')->load($payment->metadata->order_id);

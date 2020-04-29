@@ -6,46 +6,72 @@ class Satispay_Satispay_CallbackController extends Mage_Core_Controller_Front_Ac
     public function indexAction()
     {
         $helper = Mage::helper('satispay');
+        /** @var \Satispay_Satispay_Model_Logger $logger */
         $logger = Mage::getModel('satispay/logger', array($helper->debugModeEnable()));
-        $sandbox = $helper->isSandbox();
-        $logger->debug('sandbox: ' . ($sandbox ? 'yes' : 'no'));
 
-        \SatispayGBusiness\Api::setSandbox($sandbox);
-        \SatispayGBusiness\Api::setPluginVersionHeader('1.2.0');
+        $paymentId = $this->getRequest()->getParam('payment_id');
+        if (!$paymentId) {
+            $logger->error('Parameter payment_id is required.');
+            $this->getResponse()->setBody('Error, see logs for more details.');
+            return;
+        }
+
+        $isSandbox = $helper->isSandbox();
+        $logger->debug('sandbox: ' . ($isSandbox ? 'yes' : 'no'));
+
+        \SatispayGBusiness\Api::setSandbox($isSandbox);
+        \SatispayGBusiness\Api::setPluginVersionHeader($helper->getExtensionVersion());
         \SatispayGBusiness\Api::setPluginNameHeader('Magento');
         \SatispayGBusiness\Api::setTypeHeader('ECOMMERCE-PLUGIN');
-        $magentoVersion = Mage::getVersionInfo();
-        \SatispayGBusiness\Api::setPlatformVersionHeader($magentoVersion['major'] . '.' . $magentoVersion['minor'] . '.' . $magentoVersion['revision']);
-        \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey(null, $sandbox));
-        \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey(null, $sandbox));
-        \SatispayGBusiness\Api::setKeyId($helper->getKeyId(null, $sandbox));
+        \SatispayGBusiness\Api::setPlatformVersionHeader(Mage::getVersion());
+        \SatispayGBusiness\Api::setPublicKey($helper->getPublicKey());
+        \SatispayGBusiness\Api::setPrivateKey($helper->getPrivateKey());
+        \SatispayGBusiness\Api::setKeyId($helper->getKeyId($isSandbox));
 
-
-        $payments = \SatispayGBusiness\Payment::get($this->getRequest()->getQuery('payment_id'));
-        $order = Mage::getModel('sales/order')->load($payments->metadata->order_id);
-        $logger->debug(print_r(array('orderStatus' => $order->getStatus(), 'paymentStatus' => $payments->status), true));
-        if ($order->getStatus() === 'pending') {
-            if ($payments->status === 'ACCEPTED') {
-                $payment = $order->getPayment();
-                $payment->setTransactionId($payments->id)
-                    ->setIsTransactionClosed(false)
-                    ->registerCaptureNotification($order->getGrandTotal(), false);
-                $order->save();
-                $logger->debug('transaction: ' . $payments->id);
-                $invoice = $payment->getCreatedInvoice();
-                if ($invoice && !$order->getEmailSent()) {
-                    $order->queueNewOrderEmail()
-                        ->setIsCustomerNotified(true)
-                        ->save();
-                }
-                $logger->debug('invoice: ' . $invoice->getIncrementId());
-            }
-
-            if ($payments->status === 'FAILURE' || $payments->status === 'CANCELED') {
-                $order->cancel()->save();
-                $logger->error('order: ' . $order->getIncrementId() . ' has been canceled' );
-            }
+        try {
+            $serverPayment = \SatispayGBusiness\Payment::get($paymentId);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+            $this->getResponse()->setBody('Error, see logs for more details.');
+            return;
         }
+
+        if (!isset($serverPayment->status)) {
+            $logger->error('Invalid server payment object retrieved for ' . $paymentId);
+            $this->getResponse()->setBody('Error, see logs for more details.');
+            $this->getResponse()->setBody('OK');
+        }
+
+        $order = Mage::getModel('sales/order')->load($serverPayment->metadata->order_id);
+        $logger->debug(print_r(array('orderStatus' => $order->getStatus(), 'paymentStatus' => $serverPayment->status), true));
+
+        if ($order->getStatus() !== 'pending') {
+            $logger->debug('Server payment ' . $paymentId . ' already processed');
+            $this->getResponse()->setBody('OK');
+            return;
+        }
+
+        if ($serverPayment->status === 'ACCEPTED') {
+            $payment = $order->getPayment();
+            $payment->setTransactionId($serverPayment->id)
+                ->setIsTransactionClosed(false)
+                ->registerCaptureNotification($order->getGrandTotal(), false);
+            $order->save();
+            $logger->debug('Transaction saved for: ' . $serverPayment->id);
+            $invoice = $payment->getCreatedInvoice();
+            if ($invoice && !$order->getEmailSent()) {
+                $order->queueNewOrderEmail()
+                    ->setIsCustomerNotified(true)
+                    ->save();
+            }
+            $logger->debug('Invoice: ' . $invoice->getIncrementId());
+        }
+
+        if ($serverPayment->status === 'FAILURE' || $serverPayment->status === 'CANCELED') {
+            $order->cancel()->save();
+            $logger->error('Order ' . $order->getIncrementId() . ' has been canceled.' );
+        }
+
         $this->getResponse()->setBody('OK');
     }
 }
