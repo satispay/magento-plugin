@@ -34,7 +34,7 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
             $logger->error('order '. $order->getIncrementId() . ' has been canceled');
             return $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
                 '_secure' => true,
-                Mage::getSingleton('core/session')->addSuccess('Please Generate New KEYS to complete the order with Satispay')
+                Mage::getSingleton('core/session')->addError('Please Generate New KEYS to complete the order with Satispay')
             )));
         }
 

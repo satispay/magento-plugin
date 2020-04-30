@@ -36,7 +36,7 @@ class Satispay_Satispay_Adminhtml_KeysgeneratorController extends Mage_Adminhtml
 
         $result = 0;
         if (isset($publicKey) && isset($privateKey) && isset($keyId)) {
-            $result = 'public key, private key and key id generated ';
+            $result = 'Satispay activated correctly.';
         }
 
         Mage::app()->getResponse()->setBody($result);
