@@ -20,7 +20,6 @@ class Satispay_Satispay_Adminhtml_KeysgeneratorController extends Mage_Adminhtml
         }
 
         try {
-            // TODO verficare se private/public key cambiano a seconda della sandbox
             \SatispayGBusiness\Api::setSandbox($isSandbox);
             $authentication = \SatispayGBusiness\Api::authenticateWithToken($helper->getToken($isSandbox));
             $publicKey = $authentication->publicKey;
