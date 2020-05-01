@@ -39,8 +39,7 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
       $cart->save();
       // cart session message
       $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
-        '_secure' => true,
-          Mage::getSingleton('core/session')->addSuccess('ATTENTION: you don\'t have sufficient balance. Try borrowing from a friend to complete the payment')
+        '_secure' => true
       )));
     }
   }
