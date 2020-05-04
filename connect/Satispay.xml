@@ -11,7 +11,7 @@
    <license_uri>https://www.gnu.org/licenses/gpl-3.0.en.html</license_uri>
    <version>2.0.0</version>
    <stability>stable</stability>
-   <notes>Various Improvements</notes>
+   <notes>New payment UI with QR Code</notes>
    <authors>
       <name>
          <name>Satispay</name>
