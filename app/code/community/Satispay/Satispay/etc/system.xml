@@ -76,15 +76,14 @@
 
 
             <activate translate="button_label">
-              <label></label>
-              <button_label>Activate sandbox</button_label>
+              <label><![CDATA[]]></label>
+              <button_label>Activate</button_label>
               <button_url><![CDATA[]]></button_url>
               <frontend_model>satispay/adminhtml_system_config_form_button</frontend_model>
               <sort_order>50</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>0</show_in_website>
               <show_in_store>0</show_in_store>
-              <depends><sandbox>0</sandbox></depends>
             </activate>
 
             <sort_order translate="label">
