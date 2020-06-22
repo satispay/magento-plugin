@@ -9,11 +9,9 @@
    <description>Satispay is a new payment system that allows you to pay stores or friends from your smartphone. To make the service more secure, more efficient and cheaper, we constructed an entirely new platform that is independent from traditional payment methods such as debit and credit cards.</description>
    <license>GPL-3.0</license>
    <license_uri>https://www.gnu.org/licenses/gpl-3.0.en.html</license_uri>
-   <version>2.0.1</version>
+   <version>2.0.0</version>
    <stability>stable</stability>
-   <notes>New payment UI with QR Code
-
-NB: If you already have an old version of the extension, please remove it and clear Satispay references from your database before installing. This version needs to be configured with a new authentication method.</notes>
+   <notes>New payment UI with QR Code</notes>
    <authors>
       <name>
          <name>Satispay</name>
