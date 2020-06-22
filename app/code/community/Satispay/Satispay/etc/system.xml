@@ -10,50 +10,91 @@
           <show_in_default>1</show_in_default>
           <show_in_website>1</show_in_website>
           <show_in_store>1</show_in_store>
+          <expanded>1</expanded>
           <fields>
             <active translate="label">
               <label>Enabled</label>
               <frontend_type>select</frontend_type>
               <source_model>adminhtml/system_config_source_yesno</source_model>
-              <sort_order>1</sort_order>
+              <sort_order>10</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
             </active>
-            <title translate="label">
-              <label>Title</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>2</sort_order>
+
+            <debug_mode translate="label">
+              <label>Debug Mode</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>15</sort_order>
+              <comment><![CDATA[Enable more verbose logging for debug purpose]]></comment>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
+            </debug_mode>
+
+            <title translate="label">
+              <label>Title</label>
+              <frontend_type>text</frontend_type>
+              <sort_order>20</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>1</show_in_website>
+              <show_in_store>1</show_in_store>
             </title>
+
+            <sandbox translate="label">
+              <label>Sandbox</label>
+              <frontend_type>select</frontend_type>
+              <source_model>adminhtml/system_config_source_yesno</source_model>
+              <sort_order>30</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+            </sandbox>
+
+            <token translate="label comment">
+              <label>Activation code</label>
+              <comment><![CDATA[Insert the six characters activation code from Online Shop section on Satispay Dashboard. Save configuration to enable the 'Activate' button.]]></comment>
+              <frontend_type>text</frontend_type>
+              <sort_order>40</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends><sandbox>0</sandbox></depends>
+            </token>
+
+            <token_sandbox translate="label comment">
+              <label>Activation code (sandbox)</label>
+              <comment><![CDATA[Insert the six characters sandbox activation code from Online Shop section on Satispay Dashboard. Save configuration to enable the 'Activate' button.]]></comment>
+              <frontend_type>text</frontend_type>
+              <sort_order>40</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+              <depends><sandbox>1</sandbox></depends>
+            </token_sandbox>
+
+
+            <activate translate="button_label">
+              <label><![CDATA[]]></label>
+              <button_label>Activate</button_label>
+              <button_url><![CDATA[]]></button_url>
+              <frontend_model>satispay/adminhtml_system_config_form_button</frontend_model>
+              <sort_order>50</sort_order>
+              <show_in_default>1</show_in_default>
+              <show_in_website>0</show_in_website>
+              <show_in_store>0</show_in_store>
+            </activate>
+
             <sort_order translate="label">
               <label>Sort Order</label>
               <frontend_type>text</frontend_type>
-              <sort_order>3</sort_order>
+              <sort_order>60</sort_order>
               <show_in_default>1</show_in_default>
               <show_in_website>1</show_in_website>
               <show_in_store>0</show_in_store>
               <frontend_class>validate-number</frontend_class>
             </sort_order>
-            <staging translate="label">
-              <label>Sandbox</label>
-              <frontend_type>select</frontend_type>
-              <source_model>adminhtml/system_config_source_yesno</source_model>
-              <sort_order>4</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>1</show_in_website>
-              <show_in_store>0</show_in_store>
-            </staging>
-            <securityBearer translate="label">
-              <label>Security Bearer</label>
-              <frontend_type>text</frontend_type>
-              <sort_order>5</sort_order>
-              <show_in_default>1</show_in_default>
-              <show_in_website>1</show_in_website>
-              <show_in_store>0</show_in_store>
-            </securityBearer>
           </fields>
         </satispay>
       </groups>

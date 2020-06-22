@@ -2,7 +2,7 @@
 <config>
   <modules>
     <Satispay_Satispay>
-      <version>1.5.0</version>
+      <version>2.0.0</version>
     </Satispay_Satispay>
   </modules>
   <global>
@@ -16,6 +16,11 @@
         <class>Satispay_Satispay_Model</class>
       </satispay>
     </models>
+    <blocks>
+      <satispay>
+        <class>Satispay_Satispay_Block</class>
+      </satispay>
+    </blocks>
   </global>
   <frontend>
     <routers>
@@ -45,9 +50,40 @@
         <!-- <payment_action>sale</payment_action> -->
         <model>satispay/payment</model>
         <active>0</active>
-        <staging>0</staging>
-        <sort_order>1</sort_order>
       </satispay>
     </payment>
   </default>
-</config>
+  <admin>
+    <routers>
+      <adminhtml>
+        <args>
+          <modules>
+            <satispay after="Mage_Adminhtml">Satispay_Satispay</satispay>
+          </modules>
+        </args>
+      </adminhtml>
+    </routers>
+  </admin>
+  <adminhtml>
+    <acl>
+      <resources>
+        <all>
+          <title>Allow Everything</title>
+        </all>
+        <admin>
+          <children>
+            <system>
+              <payment>
+                <group>
+                    <satispay>
+                      <title>Satispay Settings</title>
+                    </satispay>
+                </group>
+              </payment>
+            </system>
+          </children>
+        </admin>
+      </resources>
+    </acl>
+  </adminhtml>
+ </config>
