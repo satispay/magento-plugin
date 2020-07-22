@@ -74,7 +74,7 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
                 "flow" => "MATCH_CODE",
                 "amount_unit" => round($order->getGrandTotal() * 100),
                 "currency" => $order->getOrderCurrencyCode(),
-                "description" => "#" . $order->getIncrementId(),
+                "external_code" => $order->getIncrementId(),
                 "callback_url" => Mage::getUrl('satispay/callback', array(
                     "_secure" => true,
                     "_query" => "payment_id={uuid}"
