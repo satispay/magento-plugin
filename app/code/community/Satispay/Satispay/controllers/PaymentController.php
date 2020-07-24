@@ -15,7 +15,7 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
         if (!$publicKey || !$privateKey || !$keyId) {
             $logger->error('PublicKey: ' . ($publicKey ? 'ok' : 'missing'));
             $logger->error('PrivateKey: ' . ($privateKey ? 'ok' : 'missing'));
-            $logger->error('KeyId: ' . ($keyId ? 'ok' : 'missing' ));
+            $logger->error('KeyId: ' . ($keyId ? 'ok' : 'missing'));
             $session = Mage::getSingleton('checkout/session');
             $order = $session->getLastRealOrder();
             $session->clearHelperData();
@@ -31,7 +31,7 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
                 }
             }
             $cart->save();
-            $logger->error('order '. $order->getIncrementId() . ' has been canceled');
+            $logger->error('order ' . $order->getIncrementId() . ' has been canceled');
             return $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
                 '_secure' => true,
                 Mage::getSingleton('core/session')->addError('Please Generate New KEYS to complete the order with Satispay')
@@ -65,7 +65,7 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
                 }
             }
             $cart->save();
-            $logger->error('order '. $order->getIncrementId() . ' has been canceled');
+            $logger->error('order ' . $order->getIncrementId() . ' has been canceled');
             $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart', array(
                 '_secure' => true
             )));
@@ -89,11 +89,14 @@ class Satispay_Satispay_PaymentController extends Mage_Core_Controller_Front_Act
             );
             $logger->debug(print_r(array('paymentBody ' => $paymentBody), true));
             $payment = \SatispayGBusiness\Payment::create($paymentBody);
-            $satispayUrl = 'https://online.satispay.com/pay/' . $payment->id;
+            $satispayUrl = 'https://online.satispay.com/';
             if ($sandbox) {
-                $satispayUrl = 'https://staging.online.satispay.com/pay/' . $payment->id;
+                $satispayUrl = 'https://staging.online.satispay.com/';
             }
-            $this->getResponse()->setBody("<script src=\"https://staging.online.satispay.com/web-button.js\" data-payment-id=\"$payment->id\"></script><script>history.replaceState({}, '', '?back-from-satispay=1'); setTimeout(function () { location.href = '$satispayUrl'; }, 200);</script>");
+            $paymentUrl = $satispayUrl . 'pay/' . $payment->id;
+            $buttonUrl = $satispayUrl . 'web-button.js';
+
+            $this->getResponse()->setBody("<script src=\"$buttonUrl\" data-payment-id=\"$payment->id\"></script><script>history.replaceState({}, '', '?back-from-satispay=1'); setTimeout(function () { location.href = '$paymentUrl'; }, 200);</script>");
         }
     }
 }
