@@ -90,7 +90,7 @@
   <crontab>
     <jobs>
       <satispay_finalize_unhandled_payments>
-        <schedule><cron_expr>*/1 * * * *</cron_expr></schedule>
+        <schedule><cron_expr>0 */4 * * *</cron_expr></schedule>
         <run><model>satispay/observer::finalize</model></run>
       </satispay_finalize_unhandled_payments>
     </jobs>

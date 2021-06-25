@@ -48,13 +48,13 @@ class Satispay_Satispay_Helper_Data extends Mage_Core_Helper_Abstract
      * @param $isSandbox
      * @return mixed
      */
-        public function getToken($isSandbox, $storeId = null)
-        {
-            if ($isSandbox) {
-                return Mage::getStoreConfig('payment/satispay/token_sandbox', $storeId);
-            }
-            return Mage::getStoreConfig('payment/satispay/token', $storeId);
+    public function getToken($isSandbox, $storeId = null)
+    {
+        if ($isSandbox) {
+            return Mage::getStoreConfig('payment/satispay/token_sandbox', $storeId);
         }
+        return Mage::getStoreConfig('payment/satispay/token', $storeId);
+    }
 
     /**
      * @param $val
