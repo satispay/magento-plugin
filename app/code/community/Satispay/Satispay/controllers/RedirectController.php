@@ -21,10 +21,14 @@ class Satispay_Satispay_RedirectController extends Mage_Core_Controller_Front_Ac
     $order = Mage::getModel('sales/order')->load($satispayPayment->metadata->order_id);
 
     if ($satispayPayment->status === 'ACCEPTED') {
-      $payment = $order->getPayment();
-      if (isset($payment)) {
+      try {
+        $payment = $order->getPayment();
+        if (isset($payment)) {
           $payment->setLastTransId($satispayPayment->id);
           $payment->save();
+        }
+      } catch (\Exception $e) {
+          $logger->error('Order id - ' . $order->getEntityId() . ' - Could not save transaction Id for payment due to the following error: ' . $e->getMessage());
       }
       $this->getResponse()->setRedirect(Mage::getUrl('checkout/onepage/success', array(
         '_secure' => true

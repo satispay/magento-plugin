@@ -61,7 +61,7 @@ class Satispay_Satispay_Model_Observer
         return $now->sub($tosub)->format('Y-m-d H:i:s');
     }
 
-    private function processOrder($order, $payment)
+    private function processOrder(Mage_Sales_Model_Order $order, Mage_Sales_Model_Order_Payment $payment)
     {
         $satispayPaymentId = $payment->getLastTransId();
         if(isset($satispayPaymentId)) {
@@ -74,7 +74,7 @@ class Satispay_Satispay_Model_Observer
         }
     }
 
-    private function addCommentToOrder($order)
+    private function addCommentToOrder(Mage_Sales_Model_Order $order)
     {
         $order->addStatusHistoryComment('The Satispay Payment has been finalized by custom command line action')
             ->setIsVisibleOnFront(false)
