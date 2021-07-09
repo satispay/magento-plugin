@@ -2,7 +2,7 @@
 <config>
   <modules>
     <Satispay_Satispay>
-      <version>2.0.0</version>
+      <version>2.1.0</version>
     </Satispay_Satispay>
   </modules>
   <global>
@@ -86,4 +86,14 @@
       </resources>
     </acl>
   </adminhtml>
+
+  <crontab>
+    <jobs>
+      <satispay_finalize_unhandled_payments>
+        <schedule><cron_expr>0 */4 * * *</cron_expr></schedule>
+        <run><model>satispay/observer::finalize</model></run>
+      </satispay_finalize_unhandled_payments>
+    </jobs>
+  </crontab>
+
  </config>
