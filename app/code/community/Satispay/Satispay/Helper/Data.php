@@ -33,6 +33,16 @@ class Satispay_Satispay_Helper_Data extends Mage_Core_Helper_Abstract
         return true;
     }
 
+    public function getFinalizeUnhandledTransactions($storeId = null)
+    {
+        return Mage::getStoreConfigFlag('payment/satispay/finalize_unhandled_transactions', $storeId);
+    }
+
+    public function getFinalizeMaxHours($storeId = null)
+    {
+        return Mage::getStoreConfig('payment/satispay/finalize_max_hours', $storeId);
+    }
+
     /**
      * @param null $storeId
      * @param $isSandbox
